@@ -31,3 +31,7 @@ export const obtenerProductos = async (req, res) => {
     res.status(500).json({ mensaje: "Error al obtener los productos" });
   }
 };
+
+export const obtenerProducto = async (req,res)=>{
+    
+}
