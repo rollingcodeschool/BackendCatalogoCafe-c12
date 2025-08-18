@@ -63,3 +63,20 @@ export const borrarProductoPorId = async (req, res) => {
     res.status(500).json({ mensaje: "No se pudo eliminar el producto por ID" });
   }
 };
+
+export const editarProductoPorId = async (req,res)=>{
+  try {
+    // todo: aqui tengo que validar
+    //1- buscar el producto por id y modificarlo
+    const productoEditado = await Producto.findByIdAndUpdate(req.params.id, req.body)
+    //2- chequear si pudo encontrar el producto
+    if (!productoEditado) {
+      return res.status(404).json({ mensaje: "Producto no encontrado" });
+    }
+    //3- enviar un mensaje de solicitud exitosa 
+    res.status(200).json({ mensaje: "Producto editado correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: "Error al editar el producto por ID" });
+  }
+}
