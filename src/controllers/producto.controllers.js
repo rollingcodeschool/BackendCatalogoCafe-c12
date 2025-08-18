@@ -47,3 +47,19 @@ export const obtenerProductoPorId = async (req, res) => {
     res.status(500).json({ mensaje: "Error al obtener el producto por ID" });
   }
 };
+
+export const borrarProductoPorId = async (req, res) => {
+  try {
+    //1-pedir a mongoose eliminar un producto por el id
+    const productoEliminado = await Producto.findByIdAndDelete(req.params.id);
+    //2- verificar que pude encontrar el producto a eliminar
+    if (!productoEliminado) {
+      return res.status(404).json({ mensaje: "Producto no encontrado" });
+    }
+    //3-enviar la respuesta que pude eliminar el producto
+    res.status(200).json({ mensaje: "Producto eliminado correctamente" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: "No se pudo eliminar el producto por ID" });
+  }
+};
