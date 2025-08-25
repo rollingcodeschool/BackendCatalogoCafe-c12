@@ -1,4 +1,3 @@
-import { validationResult } from "express-validator";
 import Producto from "../models/producto.js";
 
 export const prueba = (req, res) => {
@@ -9,11 +8,6 @@ export const prueba = (req, res) => {
 export const crearProducto = async (req, res) => {
   try {
     // console.log(req)
-    const errores = validationResult(req)
-    //errores.isEmpty(): true /false
-    if(!errores.isEmpty()) {
-      return res.status(400).json(errores.array())
-    }
     //1- validar los datos del req.body
     //2- crear el producto en la base de datos
     const productoNuevo = new Producto(req.body);
@@ -70,19 +64,22 @@ export const borrarProductoPorId = async (req, res) => {
   }
 };
 
-export const editarProductoPorId = async (req,res)=>{
+export const editarProductoPorId = async (req, res) => {
   try {
     // todo: aqui tengo que validar
     //1- buscar el producto por id y modificarlo
-    const productoEditado = await Producto.findByIdAndUpdate(req.params.id, req.body)
+    const productoEditado = await Producto.findByIdAndUpdate(
+      req.params.id,
+      req.body
+    );
     //2- chequear si pudo encontrar el producto
     if (!productoEditado) {
       return res.status(404).json({ mensaje: "Producto no encontrado" });
     }
-    //3- enviar un mensaje de solicitud exitosa 
+    //3- enviar un mensaje de solicitud exitosa
     res.status(200).json({ mensaje: "Producto editado correctamente" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Error al editar el producto por ID" });
   }
-}
+};
