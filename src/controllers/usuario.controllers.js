@@ -26,3 +26,28 @@ export const leerUsuarios = async (req, res) =>{
         res.status(500).json({error: "Error al listar los usuarios"})
     }
 }
+
+export const login = async(req, res)=>{
+    try {
+        const {email, password} = req.body
+        // 1- verficiar que existe un usuario con el email
+        // const usuarioBuscado = await Usuario.findOne({email: req.body.email})
+        const usuarioBuscado = await Usuario.findOne({email})
+        if(!usuarioBuscado){
+          return  res.status(404).json({error: "Usuario no encontrado"})
+        }
+        //2- verificar si ese usuario que encontre tiene el password correcto
+
+        const passwordValido = bcrypt.compareSync(password, usuarioBuscado.password)
+        if(!passwordValido){
+          return res.status(401).json({error: "Credenciales inválidas"})
+        }
+        // generar el token jwt
+        //enviar el token al front
+        res.status(200).json({mensaje: "Login exitoso"})
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Error en el login"})
+    }
+}
