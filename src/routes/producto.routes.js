@@ -8,6 +8,7 @@ import {
   editarProductoPorId,
 } from "../controllers/producto.controllers.js";
 import validacionProducto from "../middleware/validarProducto.js";
+import verificarJWT from "../middleware/verificarJWT.js";
 
 const router = Router();
 // las solicitudes/peticiones/request
@@ -20,7 +21,7 @@ delete borrar
 router.route("/prueba").get(prueba);
 router
   .route("/")
-  .post(validacionProducto, crearProducto)
+  .post([verificarJWT,validacionProducto], crearProducto)
   .get(obtenerProductos);
 router
   .route("/:id")
