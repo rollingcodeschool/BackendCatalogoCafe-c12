@@ -1,13 +1,27 @@
 import { body } from "express-validator";
 import resultadoValidacion from "./resultadoValidacion.js";
+import Producto from "../models/producto.js";
 
 const validacionProducto = [
   body("nombreProducto")
     .notEmpty()
     .withMessage("El nombre del producto es obligatorio")
     .isLength({ min: 2, max: 100 })
-    .withMessage("El nombre del producto debe tener entre 2 y 100 caracteres"),
-  // todo: agregar una validacion customizada para verificar si el producto existe
+    .withMessage("El nombre del producto debe tener entre 2 y 100 caracteres")
+    .custom(async (valor, { req }) => {
+      const productoExistente = await Producto.findOne({
+        nombreProducto: valor,
+      });
+      //si no hay un producto con el nombre solicitado entonces si puedo crear el producto
+      if (!productoExistente) {
+        return true;
+      }
+      //si estoy editando un producto entonces verifico los id de los productos, si es el mismo, esta todo ok
+      if (req.params.id && req.params.id === productoExistente._id.toString()) {
+        return true;
+      }
+      throw new Error("Ya existe un producto con ese nombre");
+    }),
   body("precio")
     .notEmpty()
     .withMessage("El precio es obligatorio")
