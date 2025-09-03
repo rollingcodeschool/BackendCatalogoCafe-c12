@@ -9,6 +9,7 @@ import {
 } from "../controllers/producto.controllers.js";
 import validacionProducto from "../middleware/validarProducto.js";
 import verificarJWT from "../middleware/verificarJWT.js";
+import validarIdProducto from "../middleware/validarIdProducto.js";
 
 const router = Router();
 // las solicitudes/peticiones/request
@@ -26,7 +27,7 @@ router
 router
   .route("/:id")
   .get(obtenerProductoPorId)
-  .delete(verificarJWT,borrarProductoPorId)
+  .delete([verificarJWT, validarIdProducto],borrarProductoPorId)
   .put([verificarJWT,validacionProducto], editarProductoPorId);
 
 export default router;
