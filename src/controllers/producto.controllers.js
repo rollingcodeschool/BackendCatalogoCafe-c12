@@ -7,7 +7,6 @@ export const prueba = (req, res) => {
 
 export const crearProducto = async (req, res) => {
   try {
-    // console.log(req)
     //1- validar los datos del req.body
     //2- crear el producto en la base de datos
     const productoNuevo = new Producto(req.body);
