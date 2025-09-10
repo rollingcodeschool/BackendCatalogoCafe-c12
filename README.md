@@ -75,7 +75,7 @@ npm start
 
 ## 📋 Documentación de los Endpoints de la API
 
-Mira la documentación aqui
+[Mira la documentación aqui](https://documenter.getpostman.com/view/4704071/2sB3HnM1Wr#067824f0-4ad3-432a-9798-2afb8f123bc0)
 
 ## 👨‍💻👩‍💻 Autores
 
