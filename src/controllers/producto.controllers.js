@@ -94,17 +94,20 @@ export const productosPaginados = async (req, res) => {
     const salto = (pagina - 1) * limite;
     console.log(pagina, limite, salto);
     //4-buscar los productos de la pagina x
-    const productos = await Producto.find().skip(salto).limit(limite);
+    //const productos = await Producto.find().skip(salto).limit(limite);
     //5- averiguar cuantos productos tenemos en total en la BD
-    const total = await Producto.countDocuments();
-    res
-      .status(200)
-      .json({
-        productos,
-        total,
-        pagina,
-        totalPaginas: Math.ceil(total / limite),
-      });
+    //const total = await Producto.countDocuments();
+
+    const [productos, total] = await Promise.all([
+      Producto.find().skip(salto).limit(limite),
+      Producto.countDocuments(),
+    ]);
+    res.status(200).json({
+      productos,
+      total,
+      pagina,
+      totalPaginas: Math.ceil(total / limite),
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Error al obtener los productos" });
