@@ -86,13 +86,11 @@ export const editarProductoPorId = async (req, res) => {
 export const productosPaginados = async (req, res) => {
   try {
     //1- saber que pagina debemos enviar
-    console.log(req.query);
     const pagina = parseInt(req.query.pagina) || 1;
     //2- cuantos productos mostraremos por pagina
     const limite = parseInt(req.query.limite) || 10;
     //3- calcular cuantos productos debemos saltar u omitir
     const salto = (pagina - 1) * limite;
-    console.log(pagina, limite, salto);
     //4-buscar los productos de la pagina x
     //const productos = await Producto.find().skip(salto).limit(limite);
     //5- averiguar cuantos productos tenemos en total en la BD
