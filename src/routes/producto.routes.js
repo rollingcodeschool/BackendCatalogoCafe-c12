@@ -11,6 +11,8 @@ import {
 import validacionProducto from "../middleware/validarProducto.js";
 import verificarJWT from "../middleware/verificarJWT.js";
 import validarIdProducto from "../middleware/validarIdProducto.js";
+import upload from "../helpers/upload.js";
+import errorMulter from "../middleware/errorMulter.js";
 
 const router = Router();
 // las solicitudes/peticiones/request
@@ -23,7 +25,7 @@ delete borrar
 router.route("/prueba").get(prueba);
 router
   .route("/")
-  .post([verificarJWT,validacionProducto], crearProducto)
+  .post([verificarJWT, upload.single('imagen'), errorMulter, validacionProducto], crearProducto)
   .get(obtenerProductos);
 router.route('/paginacion').get(productosPaginados)
 router

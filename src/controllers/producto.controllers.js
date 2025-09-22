@@ -1,3 +1,4 @@
+import subirImagenCloudinary from "../helpers/cloudinaryUploader.js";
 import Producto from "../models/producto.js";
 
 export const prueba = (req, res) => {
@@ -7,12 +8,24 @@ export const prueba = (req, res) => {
 
 export const crearProducto = async (req, res) => {
   try {
-    //1- validar los datos del req.body
-    //2- crear el producto en la base de datos
-    const productoNuevo = new Producto(req.body);
+    let imagenUrl = "";
+    if (req.file) {
+      const resultado = await subirImagenCloudinary(req.file.buffer);
+      console.log(resultado);
+      imagenUrl = resultado.secure_url;
+    } else {
+      imagenUrl =
+        "https://images.pexels.com/photos/8101544/pexels-photo-8101544.jpeg";
+    }
+    //modificamos el objeto que guardo en la BD
+    const productoNuevo = new Producto({
+      ...req.body,
+      imagen: imagenUrl,
+    });
+    //guardar en la BD
     await productoNuevo.save();
-    //3- enviar el mensaje de respuesta
-    res.status(201).json({ mensaje: "El producto fue creado correctamente" });
+
+    res.status(201).json({ mensaje: "El producto fue creado correctamente", producto: productoNuevo });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Error al crear el producto" });
