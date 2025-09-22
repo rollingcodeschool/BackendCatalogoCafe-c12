@@ -32,6 +32,6 @@ router
   .route("/:id")
   .get(validarIdProducto,obtenerProductoPorId)
   .delete([verificarJWT, validarIdProducto],borrarProductoPorId)
-  .put([verificarJWT,validarIdProducto,validacionProducto], editarProductoPorId);
+  .put([verificarJWT,validarIdProducto,upload.single('imagen'), errorMulter, validacionProducto], editarProductoPorId);
 
 export default router;

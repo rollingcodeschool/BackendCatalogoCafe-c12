@@ -25,7 +25,12 @@ export const crearProducto = async (req, res) => {
     //guardar en la BD
     await productoNuevo.save();
 
-    res.status(201).json({ mensaje: "El producto fue creado correctamente", producto: productoNuevo });
+    res
+      .status(201)
+      .json({
+        mensaje: "El producto fue creado correctamente",
+        producto: productoNuevo,
+      });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Error al crear el producto" });
@@ -78,18 +83,28 @@ export const borrarProductoPorId = async (req, res) => {
 
 export const editarProductoPorId = async (req, res) => {
   try {
-    // todo: aqui tengo que validar
-    //1- buscar el producto por id y modificarlo
-    const productoEditado = await Producto.findByIdAndUpdate(
-      req.params.id,
-      req.body
-    );
-    //2- chequear si pudo encontrar el producto
-    if (!productoEditado) {
+    const productoBuscado = await Producto.findById(req.params.id);
+    if (!productoBuscado) {
       return res.status(404).json({ mensaje: "Producto no encontrado" });
     }
-    //3- enviar un mensaje de solicitud exitosa
-    res.status(200).json({ mensaje: "Producto editado correctamente" });
+
+    let imagenUrl = productoBuscado.imagen; // guardo en una variable la imagen actual
+
+    //verificar y subir una foto si hay un archivo
+    if (req.file) {
+      const resultado = await subirImagenCloudinary(req.file.buffer);
+      imagenUrl = resultado.secure_url;
+    } 
+
+    const productoEditado = await Producto.findByIdAndUpdate(
+      req.params.id,
+      {
+        ...req.body,
+        imagen: imagenUrl,
+      }
+    );
+   
+    res.status(200).json({ mensaje: "Producto editado correctamente", producto: productoEditado });
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: "Error al editar el producto por ID" });
